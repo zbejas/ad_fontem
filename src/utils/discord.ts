@@ -7,6 +7,11 @@ import {
     getVideoDetails,
     findOriginalContentLinks
 } from './youtube';
+import {
+    parseDuration,
+    formatDuration,
+    calculateTimeDifference
+} from './time';
 
 const logger = getLogger();
 
@@ -40,9 +45,10 @@ function handleBotReady() {
 /**
  * Build message content for original content links
  */
-async function buildOriginalContentMessage(originalLinks: string[]): Promise<{ content: string; validLinksFound: number }> {
+async function buildOriginalContentMessage(originalLinks: string[], reactionVideoDetails: any): Promise<{ content: string; validLinksFound: number }> {
     let messageContent = `🔗 **Original Content Found!**\n`;
     let validLinksFound = 0;
+    const reactionDurationSeconds = parseDuration(reactionVideoDetails.duration);
 
     // Process each original link
     for (let i = 0; i < originalLinks.length; i++) {
@@ -55,13 +61,21 @@ async function buildOriginalContentMessage(originalLinks: string[]): Promise<{ c
             const originalVideoDetails = await getVideoDetails(originalVideoId);
             if (originalVideoDetails) {
                 validLinksFound++;
+
+                const originalDurationSeconds = parseDuration(originalVideoDetails.duration);
+                const originalFormatted = formatDuration(originalDurationSeconds);
+                const reactionFormatted = formatDuration(reactionDurationSeconds);
+
+                // Format the video link with time comparison
                 if (originalLinks.length > 1) {
-                    messageContent += `\n**Original Video ${i + 1}:** "${originalVideoDetails.title}"\n`;
+                    messageContent += `\n📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})`;
                 } else {
-                    messageContent += `**Original Video:** "${originalVideoDetails.title}"\n`;
+                    messageContent += `📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})`;
                 }
-                messageContent += `**Channel:** ${originalVideoDetails.channelTitle}\n`;
-                messageContent += `**Link:** ${originalLink}\n`;
+
+                logger.debug(`Video ${i + 1}: ${originalVideoDetails.title} - Duration: ${originalDurationSeconds}s`);
+
+                messageContent += `\n`;
             } else {
                 // Video not found, skip this link entirely
                 logger.info(`Original video not found, skipping link: ${originalLink}`);
@@ -70,15 +84,11 @@ async function buildOriginalContentMessage(originalLinks: string[]): Promise<{ c
             // Non-YouTube original link - still include it
             validLinksFound++;
             if (originalLinks.length > 1) {
-                messageContent += `\n**Original Content ${i + 1}:** ${originalLink}\n`;
+                messageContent += `\n🔗 <${originalLink}>\n`;
             } else {
-                messageContent += `**Link:** ${originalLink}\n`;
+                messageContent += `🔗 <${originalLink}>\n`;
             }
         }
-    }
-
-    if (validLinksFound > 0) {
-        messageContent += `\n*This appears to be a repost. Here's the original content.*`;
     }
 
     return { content: messageContent, validLinksFound };
@@ -93,7 +103,7 @@ async function processOriginalContent(message: Message, videoDetails: any) {
     if (originalLinks.length > 0) {
         logger.info(`Found ${originalLinks.length} original content link(s)`);
 
-        const { content: messageContent, validLinksFound } = await buildOriginalContentMessage(originalLinks);
+        const { content: messageContent, validLinksFound } = await buildOriginalContentMessage(originalLinks, videoDetails);
 
         // Only send reply if we found at least one valid link
         if (validLinksFound > 0) {
