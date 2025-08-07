@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  ad-fontem:
+    container_name: ad-fontem
+    image: zbejas/ad-fontem:latest
+    restart: unless-stopped
+    env_file:
+      - fileName: .env
+    #environment:
+    #  - DISCORD_BOT_TOKEN=abc1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+    #  - YOUTUBE_API_KEY=cba0987654321fedcba0987654321fedcba0987654321fedcba0987654321fedcba
+    #  - OLLAMA_ENABLED=false
