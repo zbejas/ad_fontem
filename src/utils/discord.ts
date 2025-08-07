@@ -68,7 +68,7 @@ async function buildOriginalContentMessage(originalLinks: string[], reactionVide
 
                 // Format the video link with time comparison
                 if (originalLinks.length > 1) {
-                    messageContent += `\n📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})`;
+                    messageContent += `📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})\n`;
                 } else {
                     messageContent += `📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})`;
                 }
