@@ -127,8 +127,8 @@ The application uses the following environment variables, which should be define
 |----------|-------------|---------|---------|
 | `DEBUG` | Enable verbose debug logging | `false` | `true` |
 | `OLLAMA_ENABLED` | Enable Ollama AI analysis | `false` | `true` |
-| `OLLAMA_URL` | Ollama server endpoint | `http://localhost:11434` | `http://ollama:11434` |
-| `OLLAMA_MODEL` | Ollama model to use | `llama3.1:8b` | `llama3.1:8b` |
+| `OLLAMA_URL` | Ollama server endpoint | `None` | `http://ollama:11434` |
+| `OLLAMA_MODEL` | Ollama model to use | `None` | `llama3.1:8b` |
 | `OLLAMA_ONLY` | Skip regex, use only AI analysis | `false` | `true` |
 | `OLLAMA_PROMPT` | Custom prompt for AI analysis | _(see .env.example)_ | _(custom prompt)_ |
 
