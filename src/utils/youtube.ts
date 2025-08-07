@@ -168,7 +168,7 @@ export async function extractLinksWithOllama(description: string): Promise<strin
                 model: config.OLLAMA_MODEL,
                 prompt: prompt,
                 stream: false,
-                keep_alive: 0,
+                keep_alive: config.OLLAMA_KEEP_ALIVE,
                 format: {
                     type: "object",
                     properties: {
@@ -197,7 +197,7 @@ export async function extractLinksWithOllama(description: string): Promise<strin
         // Extract all YouTube links from the response
         const foundLinks: string[] = [];
 
-        // Try to parse as structured JSON first
+        // Parse structured JSON response
         try {
             const structuredResponse = JSON.parse(response);
             if (structuredResponse.links && Array.isArray(structuredResponse.links)) {
@@ -212,60 +212,15 @@ export async function extractLinksWithOllama(description: string): Promise<strin
                     }
                 }
 
-                // Return early if we successfully parsed structured response
                 return foundLinks;
-            } else if (structuredResponse.links === undefined) {
+            } else {
                 // Handle case where model returns an object but no links property
                 logger.debug("Structured response missing 'links' property, returning empty array");
                 return [];
             }
         } catch (jsonError) {
-            logger.debug(`Failed to parse structured JSON response, falling back to legacy parsing: ${jsonError}`);
-
-            // Check if the response is just "None" or similar
-            const trimmedResponse = response.trim().toLowerCase();
-            if (trimmedResponse === 'none' || trimmedResponse === 'null' || trimmedResponse === '[]' || trimmedResponse === '') {
-                logger.debug("Model returned explicit 'no links' response");
-                return [];
-            }
-
-            // Fallback to legacy parsing for backward compatibility
-            // First try to parse as array format [link1, link2]
-            if (response.trim().startsWith('[') && response.trim().endsWith(']')) {
-                try {
-                    // Remove brackets and split by comma
-                    const arrayContent = response.trim().slice(1, -1);
-                    const links = arrayContent.split(',').map((link: string) => link.trim().replace(/['"]/g, ''));
-
-                    logger.debug(`Found array format with ${links.length} potential links`);
-
-                    for (const link of links) {
-                        logger.debug(`Processing array item: "${link}"`);
-                        const validatedLink = findYouTubeLink(link);
-                        if (validatedLink && !foundLinks.includes(validatedLink)) {
-                            foundLinks.push(validatedLink);
-                            logger.info(`Ollama found original content link: ${validatedLink}`);
-                        }
-                    }
-                } catch (error) {
-                    logger.debug(`Failed to parse array format, falling back to line-by-line: ${error}`);
-                }
-            }
-
-            // If no links found with array parsing, fall back to line-by-line parsing
-            if (foundLinks.length === 0) {
-                const lines = response.split('\n');
-                logger.debug(`Split response into ${lines.length} lines`);
-
-                for (const line of lines) {
-                    logger.debug(`Processing line: "${line.trim()}"`);
-                    const validatedLink = findYouTubeLink(line.trim());
-                    if (validatedLink && !foundLinks.includes(validatedLink)) {
-                        foundLinks.push(validatedLink);
-                        logger.info(`Ollama found original content link: ${validatedLink}`);
-                    }
-                }
-            }
+            logger.warn(`Failed to parse structured JSON response: ${jsonError}`);
+            return [];
         }
 
         return foundLinks;
