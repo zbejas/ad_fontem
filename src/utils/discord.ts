@@ -73,6 +73,7 @@ export async function initializeBot() {
                 logger.info(`Found ${originalLinks.length} original content link(s)`);
 
                 let messageContent = `🔗 **Original Content Found!**\n`;
+                let validLinksFound = 0;
 
                 // Process each original link
                 for (let i = 0; i < originalLinks.length; i++) {
@@ -84,6 +85,7 @@ export async function initializeBot() {
                     if (originalVideoId) {
                         const originalVideoDetails = await getVideoDetails(originalVideoId);
                         if (originalVideoDetails) {
+                            validLinksFound++;
                             if (originalLinks.length > 1) {
                                 messageContent += `\n**Original Video ${i + 1}:** "${originalVideoDetails.title}"\n`;
                             } else {
@@ -92,15 +94,12 @@ export async function initializeBot() {
                             messageContent += `**Channel:** ${originalVideoDetails.channelTitle}\n`;
                             messageContent += `**Link:** ${originalLink}\n`;
                         } else {
-                            // Just share the link if we can't get details
-                            if (originalLinks.length > 1) {
-                                messageContent += `\n**Original Content ${i + 1}:** ${originalLink}\n`;
-                            } else {
-                                messageContent += `**Link:** ${originalLink}\n`;
-                            }
+                            // Video not found, skip this link entirely
+                            logger.info(`Original video not found, skipping link: ${originalLink}`);
                         }
                     } else {
-                        // Non-YouTube original link
+                        // Non-YouTube original link - still include it
+                        validLinksFound++;
                         if (originalLinks.length > 1) {
                             messageContent += `\n**Original Content ${i + 1}:** ${originalLink}\n`;
                         } else {
@@ -109,14 +108,19 @@ export async function initializeBot() {
                     }
                 }
 
-                messageContent += `\n*This appears to be a repost. Here's the original content.*`;
+                // Only send reply if we found at least one valid link
+                if (validLinksFound > 0) {
+                    messageContent += `\n*This appears to be a repost. Here's the original content.*`;
 
-                await message.reply({
-                    content: messageContent,
-                    allowedMentions: { repliedUser: false }
-                });
+                    await message.reply({
+                        content: messageContent,
+                        allowedMentions: { repliedUser: false }
+                    });
 
-                logger.info(`Replied with ${originalLinks.length} original content link(s)`);
+                    logger.info(`Replied with ${validLinksFound} valid original content link(s)`);
+                } else {
+                    logger.info(`No valid original content links found (all videos unavailable)`);
+                }
             } else {
                 logger.debug(`No original content links found in description for: ${videoDetails.title}`);
             }
