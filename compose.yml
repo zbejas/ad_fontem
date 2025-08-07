@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ad-fontem:
     container_name: ad-fontem
