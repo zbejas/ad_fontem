@@ -8,6 +8,7 @@ export interface VideoDetails {
     channelId: string;
     title: string;
     channelTitle: string;
+    duration: string; // ISO 8601 duration format (e.g., "PT20M30S")
 }
 
 /**
@@ -49,7 +50,7 @@ export function findYouTubeLink(text: string): string | null {
  * @returns A promise that resolves to an object with description and channelId, or null.
  */
 export async function getVideoDetails(videoId: string): Promise<VideoDetails | null> {
-    const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${config.YOUTUBE_API_KEY}`;
+    const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${config.YOUTUBE_API_KEY}`;
 
     try {
         logger.debug(`Fetching video details for ID: ${videoId}`);
@@ -64,12 +65,14 @@ export async function getVideoDetails(videoId: string): Promise<VideoDetails | n
 
         if (data.items && data.items.length > 0) {
             const snippet = data.items[0].snippet;
+            const contentDetails = data.items[0].contentDetails;
             logger.debug(`Found video: ${snippet.title} by ${snippet.channelTitle}`);
             return {
                 description: snippet.description,
                 channelId: snippet.channelId,
                 title: snippet.title,
-                channelTitle: snippet.channelTitle
+                channelTitle: snippet.channelTitle,
+                duration: contentDetails.duration
             };
         } else {
             logger.warn(`Video with ID '${videoId}' not found.`);
