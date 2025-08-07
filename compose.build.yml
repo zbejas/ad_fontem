@@ -3,8 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ad-fontem
-    image: zbejas/ad-fontem:latest
+    container_name: ad_fontem
     restart: unless-stopped
     env_file:
       - .env
