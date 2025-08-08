@@ -1,4 +1,6 @@
 import { getLogger } from './logger';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 const logger = getLogger();
 
@@ -11,6 +13,7 @@ class Config {
     OLLAMA_URL: string;
     OLLAMA_MODEL: string;
     OLLAMA_PROMPT: string;
+    OLLAMA_KEEP_ALIVE: number;
 
     constructor() {
         logger.info("Loading environment variables");
@@ -25,7 +28,8 @@ class Config {
         this.OLLAMA_ONLY = env.OLLAMA_ONLY?.trim().toLowerCase() === 'true';
         this.OLLAMA_URL = env.OLLAMA_URL?.trim() || 'http://localhost:11434';
         this.OLLAMA_MODEL = env.OLLAMA_MODEL?.trim() || '';
-        this.OLLAMA_PROMPT = env.OLLAMA_PROMPT?.trim() || '';
+        this.OLLAMA_PROMPT = env.OLLAMA_PROMPT?.trim() || this.getDefaultSystemPrompt();
+        this.OLLAMA_KEEP_ALIVE = parseInt(env.OLLAMA_KEEP_ALIVE?.trim() || '0') || 0;
 
         logger.info("Bot will monitor all servers");
 
@@ -62,7 +66,7 @@ class Config {
                 allVarsSet = false;
             }
             if (!this.OLLAMA_PROMPT || this.OLLAMA_PROMPT.trim() === '') {
-                logger.error('OLLAMA_PROMPT environment variable not set or empty, but Ollama is enabled');
+                logger.error('OLLAMA_PROMPT not available (not set in environment and default system_prompt.txt could not be loaded), but Ollama is enabled');
                 allVarsSet = false;
             }
             if (!this.OLLAMA_URL || this.OLLAMA_URL.trim() === '') {
@@ -72,6 +76,22 @@ class Config {
         }
 
         return allVarsSet;
+    }
+
+    /**
+     * Loads the default system prompt from the system_prompt.txt file
+     * @returns The default system prompt text
+     */
+    private getDefaultSystemPrompt(): string {
+        try {
+            const promptPath = join(process.cwd(), 'src', 'system_prompt.txt');
+            const defaultPrompt = readFileSync(promptPath, 'utf-8').trim();
+            logger.debug('Loaded default system prompt from file');
+            return defaultPrompt;
+        } catch (error) {
+            logger.warn('Could not load default system prompt file, using empty string:', error);
+            return '';
+        }
     }
 
     /**

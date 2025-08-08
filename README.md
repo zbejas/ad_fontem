@@ -15,10 +15,10 @@
 
 The bot was created to support original content creators and help communities discover the source material behind reaction videos and reposts. When someone shares a YouTube link, the bot analyzes the video description to find attribution to original content and replies with links to the source material.
 
-> _Also, I dislike reaction content as it is quite a bit._
+> _Also, I quite dislike reaction content as it is recently._
 
 > [!IMPORTANT]
-> This bot respects content creators' rights and focuses on proper attribution. It only identifies content that is explicitly credited in video descriptions, helping to promote original creators rather than replacing human judgment about fair use or copyright.
+> This bot respects content creators' rights and focuses on proper attribution. It only identifies content that is explicitly credited in video descriptions, helping to promote original creators.
 
 ## ✨ Features
 
@@ -130,7 +130,8 @@ The application uses the following environment variables, which should be define
 | `OLLAMA_URL` | Ollama server endpoint | `None` | `http://ollama:11434` |
 | `OLLAMA_MODEL` | Ollama model to use | `None` | `llama3.1:8b` |
 | `OLLAMA_ONLY` | Skip regex, use only AI analysis | `false` | `true` |
-| `OLLAMA_PROMPT` | Custom prompt for AI analysis | _(see .env.example)_ | _(custom prompt)_ |
+| `OLLAMA_PROMPT` | Custom prompt for AI analysis | _(uses system_prompt.txt if not set)_ | _(custom prompt)_ |
+| `OLLAMA_KEEP_ALIVE` | Ollama connection keep-alive timeout in seconds | `0` | `60` |
 
 > [!TIP]
 > The `OLLAMA_ONLY` setting is useful when regex patterns aren't catching complex attribution formats. The AI model can understand natural language attribution better than regex patterns.

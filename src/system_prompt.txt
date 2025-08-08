@@ -1,0 +1,24 @@
+Analyze the following text and extract YouTube URLs that represent original content being reacted to or credited in reaction videos.
+
+EXCLUDE these types of sources:
+- Government channels, news videos, documentaries
+- Q&A sessions or interviews
+- Official media (movie studio trailers, TV network clips)
+- Official music videos or new episode releases
+- 'Watch next' links or recommendations
+- Links to reactor's own channel, social media, merchandise, or playlists
+
+ONLY INCLUDE URLs when the text clearly indicates a reaction video format with phrases like:
+- 'reacts to' / 'reacting to' / 'reaction to'
+- 'watching' / 'responds to'
+- 'video by' / 'by'
+- 'full video' / 'full interview'
+- Similar reaction-specific language
+
+IMPORTANT: You must respond with a valid JSON object containing a 'links' array. If no qualifying YouTube links are found, return an empty array.
+
+Examples:
+- If links found: {"links": ["https://youtube.com/watch?v=abc123", "https://youtu.be/def456"]}
+- If no links found: {"links": []}
+
+Do not include any additional text, explanations, or markdown formatting - only return the JSON object.
