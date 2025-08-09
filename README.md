@@ -48,7 +48,8 @@ You'll need to set up a few things before you can run the bot:
 > [!WARNING]
 > Keep your bot token and API keys secure. Never share them publicly or commit them to version control. If compromised, regenerate them immediately through their respective platforms.
 
-### 🐳 Docker (Recommended)
+<details>
+<summary>🐳 Docker Installation (Recommended)</summary>
 
 The easiest way to run Ad Fontem is using Docker Compose. A `compose.yml` file is provided in the repository.
 
@@ -84,7 +85,10 @@ The easiest way to run Ad Fontem is using Docker Compose. A `compose.yml` file i
 
 All application data and logs are stored in the container. You can check available Docker tags on the [Docker Hub page](https://hub.docker.com/r/zbejas/ad_fontem/tags).
 
-### 📦 Manual Installation
+</details>
+
+<details>
+<summary>📦 Manual Installation</summary>
 
 > [!IMPORTANT]
 > Manual installation requires [Bun](https://bun.sh/) to be installed on your system. Make sure you have Bun v1.0+ before proceeding.
@@ -110,18 +114,22 @@ All application data and logs are stored in the container. You can check availab
    bun run start
    ```
 
+</details>
+
 ## ⚙️ Environment Variables
 
-The application uses the following environment variables, which should be defined in a `.env` file (see `.env.example`):
+The application uses environment variables that should be defined in a `.env` file (see `.env.example`):
 
 ### Required Configuration
 
-| Variable | Description | Example | Required |
-|----------|-------------|---------|----------|
-| `DISCORD_BOT_TOKEN` | Discord bot token from Developer Portal | `abc1234` | ✔ |
-| `YOUTUBE_API_KEY` | YouTube Data API v3 key from Google Cloud | `cba4321` | ✔ |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DISCORD_BOT_TOKEN` | Discord bot token from Developer Portal | `abc1234` |
+| `YOUTUBE_API_KEY` | YouTube Data API v3 key from Google Cloud | `cba4321` |
 
 ### Optional Configuration
+<details>
+<summary>⚙️ Expand for more variables</summary>
 
 | Variable | Description | Default | Example |
 |----------|-------------|---------|---------|
@@ -136,6 +144,8 @@ The application uses the following environment variables, which should be define
 > [!TIP]
 > The `OLLAMA_ONLY` setting is useful when regex patterns aren't catching complex attribution formats. The AI model can understand natural language attribution better than regex patterns.
 
+</details>
+
 ## 🔧 How It Works
 
 When someone posts a YouTube link in a Discord server where the bot is present:
@@ -143,21 +153,23 @@ When someone posts a YouTube link in a Discord server where the bot is present:
 1. **🔍 Link Detection**: Bot automatically identifies YouTube URLs in messages
 2. **📊 API Fetch**: Retrieves video details and description using YouTube Data API v3
 3. **🧠 Analysis Phase**:
-   - **Regex First**: Searches for common attribution patterns like "Original:", "Credit:", "Reacts to:"
-   - **AI Fallback**: If enabled, uses Ollama LLM for complex natural language analysis
+   - **Standard Mode**: Searches for common attribution patterns using regex (e.g., "Original:", "Credit:", "Reacts to:")
+   - **AI Fallback**: If regex finds nothing and Ollama is enabled, uses LLM for natural language analysis
+   - **AI-Only Mode**: If `OLLAMA_ONLY=true`, skips regex entirely and uses only AI analysis
 4. **✅ Validation**: Verifies found links are valid YouTube URLs
 5. **💬 Response**: Posts original content information with proper attribution
 
 ### Attribution Patterns Detected
 
-The bot recognizes various attribution formats:
+**Regex Patterns** (Standard Mode):
 
-- `Original: https://youtube.com/watch?v=...`
-- `Credit: https://youtube.com/watch?v=...`
-- `Reacts to: https://youtube.com/watch?v=...`
-- `From: https://youtube.com/watch?v=...`
-- `Video by: https://youtube.com/watch?v=...`
-- And many more natural language patterns via AI analysis
+- Common formats: `Original:`, `Credit:`, `Reacts to:`, `From:`, `Video by:`
+- Followed by YouTube URLs in video descriptions
+
+**AI Analysis** (Fallback or AI-Only Mode):
+
+- Natural language attribution and complex sentence structures
+- Performance depends on model choice and size (larger models = better accuracy)
 
 ## 🐛 Troubleshooting
 
@@ -193,4 +205,4 @@ Application logs are stored in `logs/app.log` with automatic rotation:
 
 ---
 
-**Ad Fontem** - _Supporting original content creators, one link at a time._ 🎬✨
+**Ad Fontem** - _Skip the middleman, find the source._ 😤🎬
