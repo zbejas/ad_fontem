@@ -74,15 +74,6 @@ The easiest way to run Ad Fontem is using Docker Compose. A `compose.yml` file i
    docker compose up -d
    ```
 
-> [!TIP]
-> You can check the logs using:
->
-> ```bash
-> docker compose logs -f ad_fontem
-> ```
->
-> The `-f` flag follows the logs in real-time.
-
 All application data and logs are stored in the container. You can check available Docker tags on the [Docker Hub page](https://hub.docker.com/r/zbejas/ad_fontem/tags).
 
 </details>
