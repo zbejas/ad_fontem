@@ -133,7 +133,6 @@ The application uses environment variables that should be defined in a `.env` fi
 | `OLLAMA_KEEP_ALIVE` | Ollama connection keep-alive timeout in seconds | `0` | `60` |
 
 </details>
-<br>
 
 > [!TIP]
 > The `OLLAMA_ONLY` setting is useful when regex patterns aren't catching complex attribution formats. The AI model can understand natural language attribution better than regex patterns.
