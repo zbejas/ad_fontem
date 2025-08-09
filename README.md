@@ -48,7 +48,8 @@ You'll need to set up a few things before you can run the bot:
 > [!WARNING]
 > Keep your bot token and API keys secure. Never share them publicly or commit them to version control. If compromised, regenerate them immediately through their respective platforms.
 
-### 🐳 Docker (Recommended)
+<details>
+<summary>🐳 Docker Installation (Recommended)</summary>
 
 The easiest way to run Ad Fontem is using Docker Compose. A `compose.yml` file is provided in the repository.
 
@@ -73,21 +74,14 @@ The easiest way to run Ad Fontem is using Docker Compose. A `compose.yml` file i
    docker compose up -d
    ```
 
-> [!TIP]
-> You can check the logs using:
->
-> ```bash
-> docker compose logs -f ad_fontem
-> ```
->
-> The `-f` flag follows the logs in real-time.
-
 All application data and logs are stored in the container. You can check available Docker tags on the [Docker Hub page](https://hub.docker.com/r/zbejas/ad_fontem/tags).
 
-### 📦 Manual Installation
+</details>
 
-> [!IMPORTANT]
-> Manual installation requires [Bun](https://bun.sh/) to be installed on your system. Make sure you have Bun v1.0+ before proceeding.
+<details>
+<summary>📦 Manual Installation</summary>
+
+Manual installation requires [Bun](https://bun.sh/) to be installed on your system.
 
 1. **Clone and install dependencies:**
 
@@ -110,28 +104,36 @@ All application data and logs are stored in the container. You can check availab
    bun run start
    ```
 
+</details>
+
 ## ⚙️ Environment Variables
 
-The application uses the following environment variables, which should be defined in a `.env` file (see `.env.example`):
+The application uses environment variables that should be defined in a `.env` file (see `.env.example`):
 
 ### Required Configuration
 
-| Variable | Description | Example | Required |
-|----------|-------------|---------|----------|
-| `DISCORD_BOT_TOKEN` | Discord bot token from Developer Portal | `abc1234` | ✔ |
-| `YOUTUBE_API_KEY` | YouTube Data API v3 key from Google Cloud | `cba4321` | ✔ |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DISCORD_BOT_TOKEN` | Discord bot token from Developer Portal | `abc1234` |
+| `YOUTUBE_API_KEY` | YouTube Data API v3 key from Google Cloud | `cba4321` |
 
 ### Optional Configuration
+
+<details>
+<summary>⚙️ Expand for more variables</summary>
 
 | Variable | Description | Default | Example |
 |----------|-------------|---------|---------|
 | `DEBUG` | Enable verbose debug logging | `false` | `true` |
 | `OLLAMA_ENABLED` | Enable Ollama AI analysis | `false` | `true` |
-| `OLLAMA_URL` | Ollama server endpoint | `None` | `http://ollama:11434` |
-| `OLLAMA_MODEL` | Ollama model to use | `None` | `llama3.1:8b` |
+| `OLLAMA_URL` | Ollama server endpoint | `http://localhost:11434` | `http://ollama.lan:11434` |
+| `OLLAMA_MODEL` | Ollama model to use | `None` | `gemma3:12b` |
 | `OLLAMA_ONLY` | Skip regex, use only AI analysis | `false` | `true` |
 | `OLLAMA_PROMPT` | Custom prompt for AI analysis | _(uses system_prompt.txt if not set)_ | _(custom prompt)_ |
 | `OLLAMA_KEEP_ALIVE` | Ollama connection keep-alive timeout in seconds | `0` | `60` |
+
+</details>
+<br>
 
 > [!TIP]
 > The `OLLAMA_ONLY` setting is useful when regex patterns aren't catching complex attribution formats. The AI model can understand natural language attribution better than regex patterns.
@@ -143,21 +145,23 @@ When someone posts a YouTube link in a Discord server where the bot is present:
 1. **🔍 Link Detection**: Bot automatically identifies YouTube URLs in messages
 2. **📊 API Fetch**: Retrieves video details and description using YouTube Data API v3
 3. **🧠 Analysis Phase**:
-   - **Regex First**: Searches for common attribution patterns like "Original:", "Credit:", "Reacts to:"
-   - **AI Fallback**: If enabled, uses Ollama LLM for complex natural language analysis
+   - **Standard Mode**: Searches for common attribution patterns using regex (e.g., "Original:", "Credit:", "Reacts to:")
+   - **AI Fallback**: If regex finds nothing and Ollama is enabled, uses LLM for natural language analysis
+   - **AI-Only Mode**: If `OLLAMA_ONLY=true`, skips regex entirely and uses only AI analysis
 4. **✅ Validation**: Verifies found links are valid YouTube URLs
 5. **💬 Response**: Posts original content information with proper attribution
 
 ### Attribution Patterns Detected
 
-The bot recognizes various attribution formats:
+**Regex Patterns** (Standard Mode):
 
-- `Original: https://youtube.com/watch?v=...`
-- `Credit: https://youtube.com/watch?v=...`
-- `Reacts to: https://youtube.com/watch?v=...`
-- `From: https://youtube.com/watch?v=...`
-- `Video by: https://youtube.com/watch?v=...`
-- And many more natural language patterns via AI analysis
+- Common formats: `Original:`, `Credit:`, `Reacts to:`, `From:`, `Video by:`
+- Followed by YouTube URLs in video descriptions
+
+**AI Analysis** (Fallback or AI-Only Mode):
+
+- Natural language attribution and complex sentence structures
+- Performance depends on model choice and size (larger models = better accuracy)
 
 ## 🐛 Troubleshooting
 
@@ -168,21 +172,6 @@ The bot recognizes various attribution formats:
 - **Ollama connection errors**: Ensure Ollama is running and accessible at the configured URL
 - **No original content found**: Bot only finds explicitly credited content in descriptions
 
-### Debug Mode
-
-Enable debug logging to troubleshoot issues:
-
-```env
-DEBUG=true
-```
-
-This will provide detailed logs about:
-
-- YouTube API requests and responses
-- Regex pattern matching attempts
-- Ollama AI analysis (if enabled)
-- Discord message processing
-
 ### Logs
 
 Application logs are stored in `logs/app.log` with automatic rotation:
@@ -191,6 +180,9 @@ Application logs are stored in `logs/app.log` with automatic rotation:
 - Maximum files: 5
 - Format: `YYYY-MM-DD HH:mm:ss [LEVEL] message`
 
+> [!TIP]
+> Enable debug mode by setting `DEBUG=true` in `.env` for more verbose logging. This can help diagnose issues with link detection and attribution parsing. See all environment variables [above](#⚙️-environment-variables).
+
 ---
 
-**Ad Fontem** - _Supporting original content creators, one link at a time._ 🎬✨
+**Ad Fontem** - _Skip the middleman, find the source._ 😤🎬

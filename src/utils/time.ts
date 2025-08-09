@@ -45,24 +45,3 @@ export function formatDuration(totalSeconds: number): string {
 
     return parts.length > 0 ? parts.join(' ') : '0s';
 }
-
-/**
- * Calculates and formats the time difference between two video durations
- * @param reactionDurationSeconds Duration of the reaction video in seconds
- * @param originalDurationSeconds Duration of the original video in seconds
- * @returns Formatted time difference message or null if no significant difference
- */
-export function calculateTimeDifference(reactionDurationSeconds: number, originalDurationSeconds: number): string | null {
-    const difference = reactionDurationSeconds - originalDurationSeconds;
-
-    // Only show time difference if reaction is significantly longer (more than 30 seconds)
-    if (difference > 30) {
-        const reactionFormatted = formatDuration(reactionDurationSeconds);
-        const originalFormatted = formatDuration(originalDurationSeconds);
-        const differenceFormatted = formatDuration(difference);
-
-        return `⏱️ Reaction: \`${reactionFormatted}\` | Original: \`${originalFormatted}\` | Save \`${differenceFormatted}\``;
-    }
-
-    return null;
-}
