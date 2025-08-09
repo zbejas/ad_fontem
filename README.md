@@ -171,21 +171,6 @@ When someone posts a YouTube link in a Discord server where the bot is present:
 - **Ollama connection errors**: Ensure Ollama is running and accessible at the configured URL
 - **No original content found**: Bot only finds explicitly credited content in descriptions
 
-### Debug Mode
-
-Enable debug logging to troubleshoot issues:
-
-```env
-DEBUG=true
-```
-
-This will provide detailed logs about:
-
-- YouTube API requests and responses
-- Regex pattern matching attempts
-- Ollama AI analysis (if enabled)
-- Discord message processing
-
 ### Logs
 
 Application logs are stored in `logs/app.log` with automatic rotation:
@@ -193,6 +178,9 @@ Application logs are stored in `logs/app.log` with automatic rotation:
 - Maximum file size: 10MB
 - Maximum files: 5
 - Format: `YYYY-MM-DD HH:mm:ss [LEVEL] message`
+
+> [!TIP]
+> Enable debug mode by setting `DEBUG=true` in `.env` for more verbose logging. This can help diagnose issues with link detection and attribution parsing. See all environment variables [above](#⚙️-environment-variables).
 
 ---
 
