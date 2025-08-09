@@ -10,7 +10,6 @@ import {
 import {
     parseDuration,
     formatDuration,
-    calculateTimeDifference
 } from './time';
 
 const logger = getLogger();
@@ -66,16 +65,8 @@ async function buildOriginalContentMessage(originalLinks: string[], reactionVide
                 const originalFormatted = formatDuration(originalDurationSeconds);
                 const reactionFormatted = formatDuration(reactionDurationSeconds);
 
-                // Format the video link with time comparison
-                if (originalLinks.length > 1) {
-                    messageContent += `📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})`;
-                } else {
-                    messageContent += `📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})`;
-                }
-
                 logger.debug(`Video ${i + 1}: ${originalVideoDetails.title} - Duration: ${originalDurationSeconds}s`);
-
-                messageContent += `\n`;
+                messageContent += `📺 [${originalVideoDetails.title}](<${originalLink}>) by **${originalVideoDetails.channelTitle}** (⏱️${reactionFormatted}→${originalFormatted})\n`;
             } else {
                 // Video not found, skip this link entirely
                 logger.info(`Original video not found, skipping link: ${originalLink}`);
