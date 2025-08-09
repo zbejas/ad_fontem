@@ -90,8 +90,7 @@ All application data and logs are stored in the container. You can check availab
 <details>
 <summary>📦 Manual Installation</summary>
 
-> [!IMPORTANT]
-> Manual installation requires [Bun](https://bun.sh/) to be installed on your system. Make sure you have Bun v1.0+ before proceeding.
+Manual installation requires [Bun](https://bun.sh/) to be installed on your system.
 
 1. **Clone and install dependencies:**
 
@@ -128,6 +127,7 @@ The application uses environment variables that should be defined in a `.env` fi
 | `YOUTUBE_API_KEY` | YouTube Data API v3 key from Google Cloud | `cba4321` |
 
 ### Optional Configuration
+
 <details>
 <summary>⚙️ Expand for more variables</summary>
 
