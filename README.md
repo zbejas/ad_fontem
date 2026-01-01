@@ -1,11 +1,11 @@
 # Ad Fontem
 
-[![GitHub build status](https://img.shields.io/github/actions/workflow/status/zbejas/ad_fontem/main.yml?label=main%20build)](https://github.com/zbejas/ad_fontem/actions/workflows/main.yml)
+[![GitHub build status](https://img.shields.io/github/actions/workflow/status/zbejas/ad_fontem/master.yml?label=master%20build)](https://github.com/zbejas/ad_fontem/actions/workflows/master.yml)
 [![GitHub build status](https://img.shields.io/github/actions/workflow/status/zbejas/ad_fontem/dev.yml?label=dev%20build)](https://github.com/zbejas/ad_fontem/actions/workflows/dev.yml)
-[![GitHub last commit](https://img.shields.io/github/last-commit/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/commits/main)
+[![GitHub last commit](https://img.shields.io/github/last-commit/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/commits/master)
 [![GitHub issues](https://img.shields.io/github/issues/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/pulls)
-[![GitHub license](https://img.shields.io/github/license/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/blob/main/LICENSE.md)
+[![GitHub license](https://img.shields.io/github/license/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/blob/master/LICENSE.md)
 [![Release](https://img.shields.io/github/v/release/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/releases)
 [![Repo size](https://img.shields.io/github/repo-size/zbejas/ad_fontem)](https://github.com/zbejas/ad_fontem/)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/zbejas/ad_fontem?sort=date)](https://hub.docker.com/r/zbejas/ad_fontem)
